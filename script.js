@@ -1,4 +1,5 @@
 console.log('Hello, world!');
+let currentFolder;
 let currentAudio = new Audio(); 
 let currentImg = null; 
 function secondsToMinutes(seconds) {
@@ -8,8 +9,9 @@ function secondsToMinutes(seconds) {
     return `${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
 }
 
-async function songFetch() {
-    let song = await fetch('http://127.0.0.1:3000/music');
+async function songFetch(folder) {
+    currentFolder = folder
+    let song = await fetch(`/${folder}/`);
     let response = await song.text();
     let songList = document.createElement('div');
     songList.innerHTML = response;
@@ -19,7 +21,7 @@ async function songFetch() {
     for (let index = 0; index < as.length; index++) {
         const element = as[index];
         if (element.href.endsWith(".mp3")) {
-            list.push(element.href);
+            list.push(element.href.split(`/${folder}/`)[1];
         }
     }
     return list;
