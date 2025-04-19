@@ -1,7 +1,7 @@
 console.log('Hello, world!');
-let currentFolder;
 let currentAudio = new Audio(); 
 let currentImg = null; 
+let currentfolder
 function secondsToMinutes(seconds) {
     let minutes = Math.floor(seconds / 60);
     let remainingSeconds = Math.floor(seconds % 60); 
@@ -10,7 +10,7 @@ function secondsToMinutes(seconds) {
 }
 
 async function songFetch(folder) {
-    currentFolder = folder
+    currentfolder = folder 
     let song = await fetch(`/${folder}/`);
     let response = await song.text();
     let songList = document.createElement('div');
@@ -21,27 +21,27 @@ async function songFetch(folder) {
     for (let index = 0; index < as.length; index++) {
         const element = as[index];
         if (element.href.endsWith(".mp3")) {
-            list.push(element.href.split(`/${folder}/`)[1];
+            list.push(element.href.split(`/${folder}/`)[1]);
         }
     }
     return list;
 }
 
-async function main() {
-    let songs = await songFetch();  
+async function main(folder="music") {
+    let songs = await songFetch("music");  
     console.log(songs);
     let songUL = document.querySelector('.leftsong').getElementsByTagName("ul")[0];
 
     for (const song of songs) {
         
         const songName = song.split('/').pop()
-            .replace('http://127.0.0.1:3000/music/', ' ')
+            .replace('file:///C:/Users/user/OneDrive/Desktop/spotify/music/', ' ')
             .replace('.mp3', ' ')
             .replace(/%20/g, ' ');
 
         songUL.innerHTML += `<li> 
             <img src="2995035.png" alt="">${songName}
-            <img class="hello" onclick="leftchange(event, '${song}', '${songName}')" src="9073187.png" alt="">
+            <img class="hello" onclick="leftchange(event, '${folder}/${song}', '${songName}')" src="9073187.png" alt="">
         </li>`;
         
         console.log(songName);
@@ -77,7 +77,7 @@ function leftchange(event, songUrl, songName) {
 
     let img = event.target;   
 
-    if (currentAudio && currentAudio.src === songUrl) {
+    if (currentAudio && currentAudio.src.endsWith(songUrl)) {
         if (currentAudio.paused) {
             currentAudio.play();
             img.src = 'pause.png'; 
@@ -120,7 +120,7 @@ document.querySelector('.bindu').style.left= (currentAudio.currentTime / current
         document.querySelector('.bar').addEventListener("click", (e) => {
             let percent =(e.offsetX / e.target.getBoundingClientRect().width) * 100;
             document.querySelector('.bindu').style.left= percent + "%";
-            currentAudio.curentTime = currentAudio.duration * (percent / 100);
+            currentAudio.currentTime = currentAudio.duration * (percent / 100);
         })
 }
 document.getElementById("menu-toggle").addEventListener("click", function () {
